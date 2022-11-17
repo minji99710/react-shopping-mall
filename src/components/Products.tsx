@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-
 import { formatCurrency } from "../utilities/formatCurrency";
 import { NavLink } from "react-router-dom";
+import { selector, useRecoilValue } from "recoil";
 
+const API_URL = "https://fakestoreapi.com/products";
 export type ProductProps = {
     id: number;
     title: string;
@@ -30,64 +31,37 @@ const categoryNames: categoryNamesType = {
     디지털: "electronics",
 };
 
+// api에서 데이터 받아오기
+export const getProducts = selector<ProductProps[]>({
+    key: "Products",
+    get: async () => {
+        try {
+            const res = await axios(API_URL);
+            return res.data || [];
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    },
+});
+
 export function Products() {
-    const [data, setData] = useState<ProductProps[]>([]);
-    const [filter, setFilter] = useState(data);
-    const [loading, setLoading] = useState(false);
-    let componentMounted = true;
-    const API_URL = "https://fakestoreapi.com/products";
-
-    useEffect(() => {
-        // 데이터 가져오기
-        const getProducts = async () => {
-            setLoading(true);
-            const response = await fetch(API_URL);
-            if (componentMounted) {
-                setData(await response.clone().json());
-                setFilter(await response.json());
-                setLoading(false);
-                console.log(filter);
-            }
-
-            return () => {
-                componentMounted = false;
-            };
-        };
-        getProducts();
-    }, []);
-
-    const Loading = () => {
-        return <>Loading...</>;
-    };
-
-    type ProductProps = {
-        id: number;
-        title: string;
-        price: number;
-        description: string;
-        category: string;
-        image: string;
-        rating: {
-            rate: number;
-            count: number;
-        };
-    };
-
     type Category = {
         category: string;
         limit: number;
     };
 
     const ShowProducts = ({ category, limit }: Category) => {
+        const products = useRecoilValue(getProducts);
         return (
             <>
                 <h2 className="text-4xl font-bold mt-14 mb-5 text-center">
                     {category}
                 </h2>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                    {data
-                        .filter((d) =>
-                            d.category.includes(categoryNames[category])
+                    {products
+                        .filter((product) =>
+                            product.category.includes(categoryNames[category])
                         )
                         .slice(0, limit)
                         .map(({ id, image, title, price }: ProductProps) => {
@@ -120,22 +94,15 @@ export function Products() {
         );
     };
 
-    const ShowProductsAllCategory = () => {
-        return (
-            <>
-                <ShowProducts category="패션" limit={4} />
-                <ShowProducts category="액세서리" limit={4} />
-                <ShowProducts category="디지털" limit={4} />
-            </>
-        );
-    };
-
     return (
-        <div>
+        <>
             <section className="pt-6 container mx-auto">
-                <h2 className="font-bold text-xl"></h2>
-                {loading ? <Loading /> : <ShowProductsAllCategory />}
+                <React.Suspense fallback={<div>Loading...</div>}>
+                    <ShowProducts category="패션" limit={4} />
+                    <ShowProducts category="액세서리" limit={4} />
+                    <ShowProducts category="디지털" limit={4} />
+                </React.Suspense>
             </section>
-        </div>
+        </>
     );
 }

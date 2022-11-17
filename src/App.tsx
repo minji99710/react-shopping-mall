@@ -10,27 +10,21 @@ import { Footer } from "./components/Footer";
 
 function App() {
     return (
-        <>
-            <Nav>
-                <div className="mb-4 con">
-                    <Routes>
-                        <Route>
-                            <Route path="/" element={<Home />} />
-                            <Route path="/:id" element={<Product />} />
-
-                            <Route path="/fashion" element={<Fashion />} />
-                            <Route
-                                path="/accessories"
-                                element={<Accessories />}
-                            />
-                            <Route path="/digital" element={<Digital />} />
-                            <Route path="/cart" element={<Cart />} />
-                        </Route>
-                    </Routes>
-                </div>
-                <Footer />
-            </Nav>
-        </>
+        <Nav>
+            <div className="mb-4 con">
+                <Routes>
+                    <Route>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/:id" element={<Product />} />
+                        <Route path="/fashion" element={<Fashion />} />
+                        <Route path="/accessories" element={<Accessories />} />
+                        <Route path="/digital" element={<Digital />} />
+                        <Route path="/cart" element={<Cart />} />
+                    </Route>
+                </Routes>
+            </div>
+            <Footer />
+        </Nav>
     );
 }
 
