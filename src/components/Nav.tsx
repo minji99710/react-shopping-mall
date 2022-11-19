@@ -10,6 +10,7 @@ import {
     MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import { Home } from "../pages/Home";
+import { useShoppingCart } from "../context/ShoppingCartContext";
 
 const navigation = [
     { name: "패션", href: "/fashion", current: false },
@@ -22,8 +23,7 @@ function classNames(...classes: any) {
 }
 
 export function Nav(props: any) {
-    const [mode, setMode] = useState("dark");
-    const [category, setCategory] = useState("Home");
+    const { cartQuantity } = useShoppingCart();
 
     return (
         <div className="drawer">
@@ -93,9 +93,9 @@ export function Nav(props: any) {
                             </div>
                             {/* 장바구니 */}
                             <div className="flex items-center ml-2 sm:ml-3 pr-3">
-                                <a
+                                <NavLink
                                     key={"Cart"}
-                                    href={"/cart"}
+                                    to={"/cart"}
                                     className="relative"
                                 >
                                     <ShoppingBagIcon
@@ -106,9 +106,9 @@ export function Nav(props: any) {
                                         className="w-5 h-4 bg-red-500 rounded-full flex justify-center items-center text-white absolute top-0 right-0 
                                     translate-x-1/4 -translate-y-1/4"
                                     >
-                                        2
+                                        {cartQuantity}
                                     </div>
-                                </a>
+                                </NavLink>
                             </div>
                         </div>
                     </div>

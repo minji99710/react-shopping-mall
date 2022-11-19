@@ -1,10 +1,9 @@
-import Product from "../components/Product";
+import { Products } from "../components/Products";
 
 export function Fashion() {
     return (
         <>
-            <h1>Fashion</h1>
-            {/* <ShowProducts category="패션" limit={Product.length} /> */}
+            <Products ctg="패션" lim={6} />
         </>
     );
 }

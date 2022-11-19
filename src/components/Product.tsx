@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useParams } from "react-router-dom";
+import { useShoppingCart } from "../context/ShoppingCartContext";
 import { formatCurrency } from "../utilities/formatCurrency";
 import { ProductProps } from "./Products";
 
@@ -23,6 +24,7 @@ function Product() {
     });
     const [loading, setLoading] = useState(false);
     const API_URL = "https://fakestoreapi.com/products";
+    const { increaseItemQuantity } = useShoppingCart();
 
     useEffect(() => {
         const getProduct = async () => {
@@ -101,11 +103,16 @@ function Product() {
                                     {formatCurrency(product.price)}
                                 </span>
                                 <div className="card-actions">
-                                    <button className="btn btn-primary w-">
+                                    <button
+                                        className="btn btn-primary w-"
+                                        onClick={() =>
+                                            increaseItemQuantity(product.id)
+                                        }
+                                    >
                                         장바구니에 담기
                                     </button>
                                     <button className="btn btn-outline">
-                                        <NavLink to={"/cart"}>
+                                        <NavLink key={"Cart"} to={"/cart"}>
                                             장바구니로 이동
                                         </NavLink>
                                     </button>

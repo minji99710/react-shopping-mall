@@ -1,3 +1,9 @@
+import { Products } from "../components/Products";
+
 export function Digital() {
-    return <h1>Digital</h1>;
+    return (
+        <>
+            <Products ctg="디지털" lim={10} />
+        </>
+    );
 }

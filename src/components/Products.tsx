@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState, useEffect, useContext } from "react";
 
 import { formatCurrency } from "../utilities/formatCurrency";
 import { NavLink } from "react-router-dom";
+import { DataContext } from "../App";
 
 export type ProductProps = {
     id: number;
@@ -30,32 +30,37 @@ const categoryNames: categoryNamesType = {
     디지털: "electronics",
 };
 
-export function Products() {
-    const [data, setData] = useState<ProductProps[]>([]);
-    const [filter, setFilter] = useState(data);
-    const [loading, setLoading] = useState(false);
-    let componentMounted = true;
-    const API_URL = "https://fakestoreapi.com/products";
+type ProductsCtgProps = {
+    ctg: string;
+    lim: number;
+};
 
-    useEffect(() => {
-        // 데이터 가져오기
-        const getProducts = async () => {
-            setLoading(true);
-            const response = await fetch(API_URL);
-            if (componentMounted) {
-                setData(await response.clone().json());
-                setFilter(await response.json());
-                setLoading(false);
-                console.log(filter);
-            }
+export function Products({ ctg, lim }: ProductsCtgProps) {
+    // const [data, setData] = useState<ProductProps[]>([]);
+    // const [filter, setFilter] = useState(data);
+    // const [loading, setLoading] = useState(false);
+    // let componentMounted = true;
 
-            return () => {
-                componentMounted = false;
-            };
-        };
-        getProducts();
-    }, []);
+    // const API_URL = "https://fakestoreapi.com/products";
 
+    // useEffect(() => {
+    //     // 데이터 가져오기
+    //     const getProducts = async () => {
+    //         setLoading(true);
+    //         const response = await fetch(API_URL);
+    //         if (componentMounted) {
+    //             setData(await response.clone().json());
+    //             setFilter(await response.json());
+    //             setLoading(false);
+    //         }
+
+    //         return () => {
+    //             componentMounted = false;
+    //         };
+    //     };
+    //     getProducts();
+    // }, []);
+    const { apiResponse, loading } = useContext(DataContext);
     const Loading = () => {
         return <>Loading...</>;
     };
@@ -85,7 +90,7 @@ export function Products() {
                     {category}
                 </h2>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                    {data
+                    {apiResponse
                         .filter((d) =>
                             d.category.includes(categoryNames[category])
                         )
@@ -101,7 +106,7 @@ export function Products() {
                                         <img
                                             src={image}
                                             alt="상품 이미지"
-                                            className="h-1/2"
+                                            className="h-1/2 transition-transform duration-300"
                                         />
                                     </figure>
                                     <div className="card-body bg-gray-200">
@@ -120,21 +125,15 @@ export function Products() {
         );
     };
 
-    const ShowProductsAllCategory = () => {
-        return (
-            <>
-                <ShowProducts category="패션" limit={4} />
-                <ShowProducts category="액세서리" limit={4} />
-                <ShowProducts category="디지털" limit={4} />
-            </>
-        );
-    };
-
     return (
         <div>
             <section className="pt-6 container mx-auto">
                 <h2 className="font-bold text-xl"></h2>
-                {loading ? <Loading /> : <ShowProductsAllCategory />}
+                {loading ? (
+                    <Loading />
+                ) : (
+                    <ShowProducts category={ctg} limit={lim} />
+                )}
             </section>
         </div>
     );
