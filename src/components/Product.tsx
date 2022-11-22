@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import { useShoppingCart } from "../context/ShoppingCartContext";
 import { formatCurrency } from "../utilities/formatCurrency";
+import { Breadcrumbs } from "./Breadcrumbs";
 import { ProductProps } from "./Products";
 
 function classNames(...classes: string[]) {
@@ -45,23 +46,20 @@ function Product() {
             <>
                 {product && (
                     <section className="ml-1">
-                        <div className="text-sm breadcrumbs">
-                            <ul>
-                                <li>
-                                    <a>{product.category}</a>
-                                </li>
-                                <li>
-                                    <a>{product.title}</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div className="mt-12 flg:flex lg:items-center">
-                            <img
-                                src={product.image}
-                                alt={product.title}
-                                className="w-full object-contain h-72 flex-shrink-0 py-4"
-                            />
-                            <div className="card-body">
+                        <Breadcrumbs
+                            category={product.category}
+                            depth={product.title}
+                        />
+
+                        <div className="px-4 mt-12 lg:px-0 lg:flex lg:items-center">
+                            <figure className="bg-white rounded-xl flex-shrink-0 px-4 py-4 overflow-hidden lg:mr-3">
+                                <img
+                                    src={product.image}
+                                    alt={product.title}
+                                    className="w-full object-contain rounded h-72 lg:px-6"
+                                />
+                            </figure>
+                            <div className="card-body p-0 ml-2 mt-5 ">
                                 <h2 className="card-title">
                                     {product.title}
                                     <div className="badge badge-accent">

@@ -15,7 +15,7 @@ type ShoppingCartContext = {
     getItemQuantity: (id: number) => number;
     increaseItemQuantity: (id: number) => void;
     decreaseItemQuantity: (id: number) => void;
-    removeFromCart: (id: number) => void;
+    removeFromCart: () => void;
     cartQuantity: number;
     cartItems: CartItemProps[];
 };
@@ -63,7 +63,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
     function decreaseItemQuantity(id: number) {
         setCartItems((curItems) => {
             // 상품이 카드에 1개 있으면 제거
-            if (curItems.find((item) => item.id === id)?.quantity === 0) {
+            if (curItems.find((item) => item.id === id)?.quantity === 1) {
                 return curItems.filter((item) => item.id !== id);
             } else {
                 // 상품이 카트에 있는 경우 개수만 1 증가
@@ -80,10 +80,8 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         localStorage.setItem("CART_ITEM", JSON.stringify(cartItems));
     }
 
-    function removeFromCart(id: number) {
-        setCartItems((curItems) => {
-            return curItems.filter((item) => item.id !== id);
-        });
+    function removeFromCart() {
+        setCartItems([]);
     }
 
     return (

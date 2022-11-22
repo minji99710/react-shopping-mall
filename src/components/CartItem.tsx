@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { DataContext } from "../App";
 import { useShoppingCart, CartItemProps } from "../context/ShoppingCartContext";
 import { cartState } from "../scripts/cart";
-import { Nav } from "./Nav";
+import { formatCurrency } from "../utilities/formatCurrency";
 
 // cart에 있는 각 아이템
 export function CartItem({ id, quantity }: CartItemProps) {
@@ -15,9 +15,9 @@ export function CartItem({ id, quantity }: CartItemProps) {
     return (
         <>
             {cartItem && (
-                <div className="mt-4">
+                <div className="mt-4 lg:flex my-16 ">
                     <NavLink key={"Product"} to={`/${id}`}>
-                        <figure>
+                        <figure className="w-56 min-w-full flex-shrink-0 rounded-2xl p-4 bg-white">
                             <img
                                 src={cartItem.image}
                                 alt={cartItem.title}
@@ -31,7 +31,7 @@ export function CartItem({ id, quantity }: CartItemProps) {
                                 {cartItem.title}
                             </NavLink>
                         </h2>
-                        <p>({cartItem.price * quantity})</p>
+                        <p>{formatCurrency(cartItem.price * quantity)}</p>
                         <div className="card-actions">
                             <div className="btn-group">
                                 <button

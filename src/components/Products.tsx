@@ -36,33 +36,9 @@ type ProductsCtgProps = {
 };
 
 export function Products({ ctg, lim }: ProductsCtgProps) {
-    // const [data, setData] = useState<ProductProps[]>([]);
-    // const [filter, setFilter] = useState(data);
-    // const [loading, setLoading] = useState(false);
-    // let componentMounted = true;
-
-    // const API_URL = "https://fakestoreapi.com/products";
-
-    // useEffect(() => {
-    //     // 데이터 가져오기
-    //     const getProducts = async () => {
-    //         setLoading(true);
-    //         const response = await fetch(API_URL);
-    //         if (componentMounted) {
-    //             setData(await response.clone().json());
-    //             setFilter(await response.json());
-    //             setLoading(false);
-    //         }
-
-    //         return () => {
-    //             componentMounted = false;
-    //         };
-    //     };
-    //     getProducts();
-    // }, []);
     const { apiResponse, loading } = useContext(DataContext);
     const Loading = () => {
-        return <>Loading...</>;
+        return <div>Loading...</div>;
     };
 
     type ProductProps = {
@@ -89,7 +65,8 @@ export function Products({ ctg, lim }: ProductsCtgProps) {
                 <h2 className="text-4xl font-bold mt-14 mb-5 text-center">
                     {category}
                 </h2>
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+
+                <div className="grid gap-6 grid-flow-col overflow-x-auto sm:grid-flow-row sm:grid-cols-2 lg:grid-cols-4">
                     {apiResponse
                         .filter((d) =>
                             d.category.includes(categoryNames[category])
@@ -100,7 +77,8 @@ export function Products({ ctg, lim }: ProductsCtgProps) {
                                 <NavLink
                                     key={id}
                                     to={`/${id}`}
-                                    className="card card-compact h-full bg-base-100 border-solid border border-gray-200 rounded-xl lg:card-normal"
+                                    className="card card-compact h-full bg-base-100 border-solid 
+                                        border border-gray-200 rounded-xl min-w-[240px] lg:card-normal "
                                 >
                                     <figure className="flex h-80 bg-white overflow-hidden object-cover py-5 px-10">
                                         <img
@@ -127,8 +105,7 @@ export function Products({ ctg, lim }: ProductsCtgProps) {
 
     return (
         <div>
-            <section className="pt-6 container mx-auto">
-                <h2 className="font-bold text-xl"></h2>
+            <section className="pt-6 px-4 container mx-auto">
                 {loading ? (
                     <Loading />
                 ) : (

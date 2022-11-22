@@ -10,6 +10,7 @@ import { Footer } from "./components/Footer";
 import { ShoppingCartProvider } from "./context/ShoppingCartContext";
 import React, { useEffect, useState } from "react";
 import { ProductProps } from "./components/Products";
+import PurchaseModal from "./components/PurchaseModal";
 
 type ProductsContext = {
     loading: boolean;
@@ -25,6 +26,10 @@ function App() {
     let componentMounted = true;
 
     const API_URL = "https://fakestoreapi.com/products";
+    document.documentElement.style.setProperty(
+        "--vh",
+        window.innerHeight * 0.01 + "px"
+    );
 
     useEffect(() => {
         // 데이터 가져오기
@@ -64,8 +69,9 @@ function App() {
                             </Route>
                         </Routes>
                     </div>
-                    <Footer />
                 </Nav>
+
+                <PurchaseModal />
             </ShoppingCartProvider>
         </DataContext.Provider>
     );

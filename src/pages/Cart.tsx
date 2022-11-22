@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { DataContext } from "../App";
+import { Breadcrumbs } from "../components/Breadcrumbs";
 import { CartItem } from "../components/CartItem";
 import { useShoppingCart } from "../context/ShoppingCartContext";
-import { cartItemState } from "../scripts/cart";
 import { formatCurrency } from "../utilities/formatCurrency";
 
 export function Cart() {
@@ -12,24 +12,14 @@ export function Cart() {
     return (
         <>
             <section className="pt-4 md:pt-5 pb-4 px-2 lg:px-4 pb-8 xl:container mx-auto">
-                <div className="text-sm breadcrumbs">
-                    <ul>
-                        <li>
-                            <a>Home</a>
-                        </li>
-                        <li>
-                            <a>Documents</a>
-                        </li>
-                        <li>Add Document</li>
-                    </ul>
-                </div>
+                <Breadcrumbs category="홈" depth="장바구니" />
                 {/* 장바구니에 담은 상품 */}
                 <div className="mt-6 md:mt-14 px-2 lg:px-0 w-full">
                     <div className="lg:mb-10">
                         <div className="lg:flex justify-between mb-20">
                             <div>
                                 {!cartItems.length
-                                    ? "No Items"
+                                    ? "장바구니에 물품이 없습니다."
                                     : cartItems.map((item) => (
                                           <CartItem key={item.id} {...item} />
                                       ))}
@@ -39,19 +29,27 @@ export function Cart() {
                                 <span className="text-xl md:text-2xl">
                                     총 :{" "}
                                     {cartItems.length &&
-                                        cartItems.reduce((total, carItem) => {
-                                            const item = apiResponse?.find(
-                                                (item) => item.id === carItem.id
-                                            );
-                                            return (
-                                                total +
-                                                (item?.price || 0) *
-                                                    carItem.quantity
-                                            );
-                                        }, 0)}
+                                        formatCurrency(
+                                            cartItems.reduce(
+                                                (total, carItem) => {
+                                                    const item =
+                                                        apiResponse?.find(
+                                                            (item) =>
+                                                                item.id ===
+                                                                carItem.id
+                                                        );
+                                                    return (
+                                                        total +
+                                                        (item?.price || 0) *
+                                                            carItem.quantity
+                                                    );
+                                                },
+                                                0
+                                            )
+                                        )}
                                 </span>
                                 <label
-                                    htmlFor="confirm-modal"
+                                    htmlFor="my-modal-6"
                                     className="btn btn-primary ml-4"
                                 >
                                     구매하기
