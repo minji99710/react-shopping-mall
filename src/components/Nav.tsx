@@ -70,12 +70,12 @@ export function Nav(props: any) {
                                     className="relative"
                                 >
                                     <ShoppingBagIcon
-                                        className="h-6 w-6 text-black stroke-1.5 dark:text-white"
+                                        className="h-6 w-6 text-black stroke-2 dark:text-white"
                                         aria-hidden="true"
                                     />
                                     <div
-                                        className="w-5 h-4 bg-red-500 rounded-full flex justify-center items-center text-white absolute top-0 right-0 
-                                    translate-x-1/4 -translate-y-1/4"
+                                        className="w-6 h-5 bg-red-500 rounded-full flex justify-center items-center text-white absolute -top-1 -right-1.5 
+                                    translate-x-1/4 -translate-y-1/4 text-xs font-bold"
                                     >
                                         {cartQuantity}
                                     </div>
