@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { NavLink, useParams } from "react-router-dom";
+import { useShoppingCart } from "../context/ShoppingCartContext";
 import { formatCurrency } from "../utilities/formatCurrency";
+import { Breadcrumbs } from "./Breadcrumbs";
 import { ProductProps } from "./Products";
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(" ");
 }
 
-function Product() {
+export function Product() {
     const { id } = useParams();
     const [product, setProduct] = useState<ProductProps>({
         id: 0,
@@ -23,6 +25,7 @@ function Product() {
     });
     const [loading, setLoading] = useState(false);
     const API_URL = "https://fakestoreapi.com/products";
+    const { increaseItemQuantity } = useShoppingCart();
 
     useEffect(() => {
         const getProduct = async () => {
@@ -43,23 +46,20 @@ function Product() {
             <>
                 {product && (
                     <section className="ml-1">
-                        <div className="text-sm breadcrumbs">
-                            <ul>
-                                <li>
-                                    <a>{product.category}</a>
-                                </li>
-                                <li>
-                                    <a>{product.title}</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div className="mt-12 flg:flex lg:items-center">
-                            <img
-                                src={product.image}
-                                alt={product.title}
-                                className="w-full object-contain h-72 flex-shrink-0 py-4"
-                            />
-                            <div className="card-body">
+                        <Breadcrumbs
+                            category={product.category}
+                            depth={product.title}
+                        />
+
+                        <div className="px-4 mt-12 lg:px-0 lg:flex lg:items-center">
+                            <figure className="bg-white rounded-xl flex-shrink-0 px-4 py-4 overflow-hidden lg:mr-3">
+                                <img
+                                    src={product.image}
+                                    alt={product.title}
+                                    className="w-full object-contain rounded h-72 lg:px-6"
+                                />
+                            </figure>
+                            <div className="card-body p-0 ml-2 mt-5 ">
                                 <h2 className="card-title">
                                     {product.title}
                                     <div className="badge badge-accent">
@@ -101,11 +101,16 @@ function Product() {
                                     {formatCurrency(product.price)}
                                 </span>
                                 <div className="card-actions">
-                                    <button className="btn btn-primary w-">
+                                    <button
+                                        className="btn btn-primary w-"
+                                        onClick={() =>
+                                            increaseItemQuantity(product.id)
+                                        }
+                                    >
                                         장바구니에 담기
                                     </button>
                                     <button className="btn btn-outline">
-                                        <NavLink to={"/cart"}>
+                                        <NavLink key={"Cart"} to={"/cart"}>
                                             장바구니로 이동
                                         </NavLink>
                                     </button>
@@ -119,12 +124,10 @@ function Product() {
     };
 
     return (
-        <div>
+        <>
             <div className="pt-4 container mx-auto">
-                <div>{loading ? <Loading /> : <ShowProduct />}</div>
+                {loading ? <Loading /> : <ShowProduct />}
             </div>
-        </div>
+        </>
     );
 }
-
-export default Product;

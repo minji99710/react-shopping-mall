@@ -1,10 +1,9 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-
+import { useContext, useRef } from "react";
 import { formatCurrency } from "../utilities/formatCurrency";
 import { NavLink } from "react-router-dom";
+import { DataContext } from "../App";
 
-export type ProductProps = {
+export interface ProductProps {
     id: number;
     title: string;
     price: number;
@@ -15,7 +14,7 @@ export type ProductProps = {
         rate: number;
         count: number;
     };
-};
+}
 
 interface categoryNamesType {
     [index: string]: string;
@@ -30,37 +29,14 @@ const categoryNames: categoryNamesType = {
     디지털: "electronics",
 };
 
-export function Products() {
-    const [data, setData] = useState<ProductProps[]>([]);
-    const [filter, setFilter] = useState(data);
-    const [loading, setLoading] = useState(false);
-    let componentMounted = true;
-    const API_URL = "https://fakestoreapi.com/products";
+interface ProductsCtgProps {
+    ctg: string;
+    lim: number;
+    isScrollX: boolean;
+}
 
-    useEffect(() => {
-        // 데이터 가져오기
-        const getProducts = async () => {
-            setLoading(true);
-            const response = await fetch(API_URL);
-            if (componentMounted) {
-                setData(await response.clone().json());
-                setFilter(await response.json());
-                setLoading(false);
-                console.log(filter);
-            }
-
-            return () => {
-                componentMounted = false;
-            };
-        };
-        getProducts();
-    }, []);
-
-    const Loading = () => {
-        return <>Loading...</>;
-    };
-
-    type ProductProps = {
+export function Products({ ctg, lim, isScrollX }: ProductsCtgProps) {
+    interface ProductProps {
         id: number;
         title: string;
         price: number;
@@ -71,71 +47,87 @@ export function Products() {
             rate: number;
             count: number;
         };
-    };
+    }
 
-    type Category = {
+    interface Category {
         category: string;
         limit: number;
+        isScrollX: boolean;
+    }
+
+    const { apiResponse, loading } = useContext(DataContext);
+    const gridRef = useRef<HTMLDivElement>(null);
+
+    const Loading = () => {
+        return <div>Loading...</div>;
     };
 
-    const ShowProducts = ({ category, limit }: Category) => {
+    const ShowProducts = ({ category, limit, isScrollX }: Category) => {
         return (
             <>
                 <h2 className="text-4xl font-bold mt-14 mb-5 text-center">
                     {category}
                 </h2>
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                    {data
-                        .filter((d) =>
-                            d.category.includes(categoryNames[category])
-                        )
-                        .slice(0, limit)
-                        .map(({ id, image, title, price }: ProductProps) => {
-                            return (
-                                <NavLink
-                                    key={id}
-                                    to={`/${id}`}
-                                    className="card card-compact h-full bg-base-100 border-solid border border-gray-200 rounded-xl lg:card-normal"
-                                >
-                                    <figure className="flex h-80 bg-white overflow-hidden object-cover py-5 px-10">
-                                        <img
-                                            src={image}
-                                            alt="상품 이미지"
-                                            className="h-1/2"
-                                        />
-                                    </figure>
-                                    <div className="card-body bg-gray-200">
-                                        <h2 className="card-title text-base">
-                                            {title}
-                                        </h2>
-                                        <p className="text-base">
-                                            {formatCurrency(price)}
-                                        </p>
-                                    </div>
-                                </NavLink>
-                            );
-                        })}
+
+                <div className="overflow-x-scroll w-full sm:overflow-visible">
+                    <div
+                        className={`w-full grid gap-6 ${
+                            isScrollX ? "grid-flow-col" : "grid-flow-row"
+                        } auto-cols-[300px] sm:grid-flow-row sm:grid-cols-2 lg:grid-cols-4`}
+                        ref={gridRef}
+                    >
+                        {apiResponse
+                            .filter((d) =>
+                                d.category.includes(categoryNames[category])
+                            )
+                            .slice(0, limit)
+                            .map(
+                                ({ id, image, title, price }: ProductProps) => {
+                                    return (
+                                        <NavLink
+                                            key={id}
+                                            to={`/${id}`}
+                                            className="card card-compact card-bordered h-full bg-base-100 border-solid 
+                                            border border-gray-200 rounded-xl lg:card-normal dark:border-gray-800"
+                                        >
+                                            <figure className="flex h-80 bg-white overflow-hidden object-cover px-6">
+                                                <img
+                                                    src={image}
+                                                    alt="상품 이미지"
+                                                    className="h-1/2 flex-shrink-0 hover:transition-transform duration-300"
+                                                />
+                                            </figure>
+                                            <div className="card-body bg-gray-200 rounded-b-xl dark:bg-gray-700">
+                                                <h2 className="card-title text-base">
+                                                    {title}
+                                                </h2>
+                                                <p className="text-base">
+                                                    {formatCurrency(price)}
+                                                </p>
+                                            </div>
+                                        </NavLink>
+                                    );
+                                }
+                            )}
+                    </div>
                 </div>
             </>
         );
     };
 
-    const ShowProductsAllCategory = () => {
-        return (
-            <>
-                <ShowProducts category="패션" limit={4} />
-                <ShowProducts category="액세서리" limit={4} />
-                <ShowProducts category="디지털" limit={4} />
-            </>
-        );
-    };
-
     return (
-        <div>
-            <section className="pt-6 container mx-auto">
-                <h2 className="font-bold text-xl"></h2>
-                {loading ? <Loading /> : <ShowProductsAllCategory />}
+        <>
+            <section className="pt-6 pb-4 px-4 container mx-auto ">
+                {loading ? (
+                    <Loading />
+                ) : (
+                    <ShowProducts
+                        category={ctg}
+                        limit={lim}
+                        isScrollX={isScrollX}
+                    />
+                )}
             </section>
-        </div>
+        </>
     );
 }

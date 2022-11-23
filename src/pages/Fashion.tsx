@@ -1,10 +1,13 @@
-import Product from "../components/Product";
+import { Breadcrumbs } from "../components/Breadcrumbs";
+import { Products } from "../components/Products";
 
 export function Fashion() {
     return (
         <>
-            <h1>Fashion</h1>
-            {/* <ShowProducts category="패션" limit={Product.length} /> */}
+            <section className="pt-4 pl-5">
+                <Breadcrumbs category="홈" depth="패션" />
+                <Products ctg="패션" lim={10} isScrollX={false} />
+            </section>
         </>
     );
 }
