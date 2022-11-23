@@ -3,6 +3,7 @@ import { DataContext } from "../App";
 
 export function SearchBar() {
     const [query, setQuery] = useState("");
+    const [isFocused, setIsFocused] = useState(false);
     const { apiResponse } = useContext(DataContext);
     const searchInput = useRef<HTMLInputElement>(null);
 
@@ -40,9 +41,11 @@ export function SearchBar() {
                     className="z-1 input input-ghost bg-gray-300 fixed right-0.5 top-16 px-2 rounded min-w-full text-sm focus:outline-0 
                     opacity-0 sm:opacity-100 sm:!block sm:static sm:max-w-xs dark:bg-gray-600"
                     onChange={(e) => setQuery(e.target.value)}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
                     ref={searchInput}
                 />
-                {query.length > 0 ? (
+                {query.length > 0 && isFocused ? (
                     <ul className="absolute top-20 -right-14 w-screen sm:top-12 sm:left-1 sm:w-52 sm:menu sm:dropdown-content p-2 shadow bg-base-100 mt-4">
                         {apiResponse
                             .filter((item) =>
