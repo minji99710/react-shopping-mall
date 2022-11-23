@@ -1,5 +1,3 @@
-import React from "react";
-
 export function Footer() {
     return (
         <>
@@ -325,5 +323,3 @@ export function Footer() {
         </>
     );
 }
-
-export default Footer;

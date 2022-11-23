@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import { useShoppingCart } from "../context/ShoppingCartContext";
 import { formatCurrency } from "../utilities/formatCurrency";
@@ -9,7 +9,7 @@ function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(" ");
 }
 
-function Product() {
+export function Product() {
     const { id } = useParams();
     const [product, setProduct] = useState<ProductProps>({
         id: 0,
@@ -124,12 +124,10 @@ function Product() {
     };
 
     return (
-        <div>
+        <>
             <div className="pt-4 container mx-auto">
-                <div>{loading ? <Loading /> : <ShowProduct />}</div>
+                {loading ? <Loading /> : <ShowProduct />}
             </div>
-        </div>
+        </>
     );
 }
-
-export default Product;

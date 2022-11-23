@@ -1,7 +1,6 @@
-import React from "react";
 import { useShoppingCart } from "../context/ShoppingCartContext";
 
-function PurchaseModal() {
+export function PurchaseModal() {
     const { removeFromCart } = useShoppingCart();
     return (
         <>
@@ -29,5 +28,3 @@ function PurchaseModal() {
         </>
     );
 }
-
-export default PurchaseModal;

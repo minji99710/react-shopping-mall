@@ -1,9 +1,9 @@
 import { Category } from "../constant/category";
 
-type BreadCrumbProps = {
+interface BreadCrumbProps {
     category: string;
     depth: string;
-};
+}
 
 export function Breadcrumbs({ category, depth }: BreadCrumbProps) {
     return (

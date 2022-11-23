@@ -6,7 +6,7 @@ export function Fashion() {
         <>
             <section className="pt-4 pl-5">
                 <Breadcrumbs category="홈" depth="패션" />
-                <Products ctg="패션" lim={6} />
+                <Products ctg="패션" lim={10} isScrollX={false} />
             </section>
         </>
     );

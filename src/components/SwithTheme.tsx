@@ -1,5 +1,5 @@
 import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 
 function SwithTheme() {

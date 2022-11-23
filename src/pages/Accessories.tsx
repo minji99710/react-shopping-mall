@@ -6,7 +6,7 @@ export function Accessories() {
         <>
             <section className="pt-4 pl-5">
                 <Breadcrumbs category="홈" depth="액세서리" />
-                <Products ctg="액세서리" lim={6} />
+                <Products ctg="액세서리" lim={10} isScrollX={false} />
             </section>
         </>
     );

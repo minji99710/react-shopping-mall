@@ -68,10 +68,13 @@ export function Slider() {
                                 </svg>
                             </Link>
                         </div>
-                        <img
-                            src={item.imgUrl}
-                            // className="w-max-full max-h-2800 min-h-880"
-                        />
+                        <div className="sm:max-h-[14rem] md:max-h-[16rem] lg:max-h-[44rem]">
+                            <img
+                                src={item.imgUrl}
+                                alt={item.title}
+                                className="h-full"
+                            />
+                        </div>
                     </div>
                 </div>
             ))}

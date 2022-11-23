@@ -1,10 +1,9 @@
-import { Link, NavLink } from "react-router-dom";
-import "../index.css";
+import { Link } from "react-router-dom";
 import { Bars3Icon, ShoppingBagIcon } from "@heroicons/react/24/outline";
 import { useShoppingCart } from "../context/ShoppingCartContext";
 import { SearchBar } from "./SearchBar";
 import SwithTheme from "./SwithTheme";
-import Footer from "./Footer";
+import { Footer } from "./Footer";
 
 const navigation = [
     { name: "패션", href: "/fashion", current: false },
@@ -23,8 +22,8 @@ export function Nav(props: any) {
         <div className="drawer">
             <input id="my-drawer" type="checkbox" className="drawer-toggle" />
             <section className="drawer-content flex flex-col h-screen justify-between">
-                {/* Navbar */}
-                <div className="fixed w-full navbar bg-base-300 bg-white z-10">
+                {/* 네비게이션 바 */}
+                <div className="fixed w-full navbar bg-white z-10 dark:bg-gray-800">
                     <div className="flex items-center w-full">
                         <label htmlFor="my-drawer" className="block md:hidden">
                             <Bars3Icon className="w-6 h-6" aria-hidden="true" />
@@ -35,7 +34,7 @@ export function Nav(props: any) {
                         >
                             <span className="dark:text-white">React Shop</span>
                         </Link>
-                        {/* 왼쪽 메뉴 목록 */}
+                        {/* 메뉴 목록 */}
                         <div className="flex-none hidden md:flex md:flex-1 ml-2">
                             {navigation.map((item) => (
                                 <Link
@@ -55,7 +54,7 @@ export function Nav(props: any) {
                                 </Link>
                             ))}
                         </div>
-                        {/* 오른쪽 목록- Navbar menu content here */}
+                        {/* 모드, 검색, 장바구니 */}
                         <div className="flex items-center">
                             {/* 다크 모드 */}
                             <SwithTheme />
@@ -65,7 +64,7 @@ export function Nav(props: any) {
 
                             {/* 장바구니 */}
                             <div className="flex items-center ml-2 sm:ml-3 pr-3">
-                                <NavLink
+                                <Link
                                     key={"Cart"}
                                     to={"/cart"}
                                     className="relative"
@@ -80,19 +79,21 @@ export function Nav(props: any) {
                                     >
                                         {cartQuantity}
                                     </div>
-                                </NavLink>
+                                </Link>
                             </div>
                         </div>
                     </div>
                 </div>
-                <section className="main mt-14">{props.children}</section>
+                {/* 메인 */}
+                <section className="main mt-14 min-w-0">
+                    {props.children}
+                </section>
                 <Footer />
             </section>
-
+            {/* 모바일 메뉴 */}
             <div className="drawer-side">
                 <label htmlFor="my-drawer" className="drawer-overlay"></label>
                 <div className="menu p-4 w-80 bg-base-100">
-                    {/*  Sidebar content here */}
                     {navigation.map((item) => (
                         <a
                             key={item.name}
@@ -112,7 +113,4 @@ export function Nav(props: any) {
             </div>
         </div>
     );
-}
-
-{
 }

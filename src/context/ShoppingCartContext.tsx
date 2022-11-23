@@ -1,24 +1,23 @@
-import React, { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
-import { Cart } from "../pages/Cart";
 
 type ShoppingCartProviderProps = {
     children: ReactNode;
 };
 
-export type CartItemProps = {
+export interface CartItemProps {
     id: number;
     quantity: number;
-};
+}
 
-type ShoppingCartContext = {
+interface ShoppingCartContext {
     getItemQuantity: (id: number) => number;
     increaseItemQuantity: (id: number) => void;
     decreaseItemQuantity: (id: number) => void;
     removeFromCart: () => void;
     cartQuantity: number;
     cartItems: CartItemProps[];
-};
+}
 
 // cart 관련 전역으로 관리할 상태들 모음
 const ShoppingCartContext = createContext({} as ShoppingCartContext);

@@ -1,12 +1,8 @@
-import React, { useContext, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { DataContext } from "../App";
-import { ProductProps } from "./Products";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
+
 export function SearchBar() {
     const [query, setQuery] = useState("");
-    const [visible, setVisible] = useState(false);
-    const [isFocusd, setIsFocused] = useState(false);
     const { apiResponse } = useContext(DataContext);
     const searchInput = useRef<HTMLInputElement>(null);
 
@@ -46,7 +42,6 @@ export function SearchBar() {
                     onChange={(e) => setQuery(e.target.value)}
                     ref={searchInput}
                 />
-
                 {query.length > 0 ? (
                     <ul className="absolute top-20 -right-14 w-screen sm:top-12 sm:left-1 sm:w-52 sm:menu sm:dropdown-content p-2 shadow bg-base-100 mt-4">
                         {apiResponse

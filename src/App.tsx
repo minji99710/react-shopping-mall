@@ -5,40 +5,31 @@ import { Accessories } from "./pages/Accessories";
 import { Digital } from "./pages/Digital";
 import { Nav } from "./components/Nav";
 import { Cart } from "./pages/Cart";
-import Product from "./components/Product";
-import { Footer } from "./components/Footer";
+import { Product } from "./components/Product";
 import { ShoppingCartProvider } from "./context/ShoppingCartContext";
 import React, { useEffect, useState } from "react";
 import { ProductProps } from "./components/Products";
-import PurchaseModal from "./components/PurchaseModal";
+import { PurchaseModal } from "./components/PurchaseModal";
 
-type ProductsContext = {
+interface ProductsContext {
     loading: boolean;
     apiResponse: ProductProps[];
-};
+}
+
 export const DataContext = React.createContext({} as ProductsContext);
 
 function App() {
     const [apiResponse, setApiResponse] = useState<ProductProps[]>([]);
-    const [data, setData] = useState<ProductProps[]>([]);
-    const [filter, setFilter] = useState(data);
     const [loading, setLoading] = useState(false);
     let componentMounted = true;
 
     const API_URL = "https://fakestoreapi.com/products";
-    document.documentElement.style.setProperty(
-        "--vh",
-        window.innerHeight * 0.01 + "px"
-    );
-
     useEffect(() => {
         // 데이터 가져오기
         const getProducts = async () => {
             setLoading(true);
             const response = await fetch(API_URL);
             if (componentMounted) {
-                // setData(await response.clone().json());
-                // // setFilter(await response.json());
                 setApiResponse(await response.json());
                 setLoading(false);
             }
@@ -70,7 +61,6 @@ function App() {
                         </Routes>
                     </div>
                 </Nav>
-
                 <PurchaseModal />
             </ShoppingCartProvider>
         </DataContext.Provider>

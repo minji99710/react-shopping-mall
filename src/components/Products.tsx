@@ -1,10 +1,9 @@
-import { useState, useEffect, useContext } from "react";
-
+import { useContext, useRef } from "react";
 import { formatCurrency } from "../utilities/formatCurrency";
 import { NavLink } from "react-router-dom";
 import { DataContext } from "../App";
 
-export type ProductProps = {
+export interface ProductProps {
     id: number;
     title: string;
     price: number;
@@ -15,7 +14,7 @@ export type ProductProps = {
         rate: number;
         count: number;
     };
-};
+}
 
 interface categoryNamesType {
     [index: string]: string;
@@ -30,18 +29,14 @@ const categoryNames: categoryNamesType = {
     디지털: "electronics",
 };
 
-type ProductsCtgProps = {
+interface ProductsCtgProps {
     ctg: string;
     lim: number;
-};
+    isScrollX: boolean;
+}
 
-export function Products({ ctg, lim }: ProductsCtgProps) {
-    const { apiResponse, loading } = useContext(DataContext);
-    const Loading = () => {
-        return <div>Loading...</div>;
-    };
-
-    type ProductProps = {
+export function Products({ ctg, lim, isScrollX }: ProductsCtgProps) {
+    interface ProductProps {
         id: number;
         title: string;
         price: number;
@@ -52,66 +47,87 @@ export function Products({ ctg, lim }: ProductsCtgProps) {
             rate: number;
             count: number;
         };
-    };
+    }
 
-    type Category = {
+    interface Category {
         category: string;
         limit: number;
+        isScrollX: boolean;
+    }
+
+    const { apiResponse, loading } = useContext(DataContext);
+    const gridRef = useRef<HTMLDivElement>(null);
+
+    const Loading = () => {
+        return <div>Loading...</div>;
     };
 
-    const ShowProducts = ({ category, limit }: Category) => {
+    const ShowProducts = ({ category, limit, isScrollX }: Category) => {
         return (
             <>
                 <h2 className="text-4xl font-bold mt-14 mb-5 text-center">
                     {category}
                 </h2>
 
-                <div className="grid gap-6 grid-flow-col overflow-x-auto sm:grid-flow-row sm:grid-cols-2 lg:grid-cols-4">
-                    {apiResponse
-                        .filter((d) =>
-                            d.category.includes(categoryNames[category])
-                        )
-                        .slice(0, limit)
-                        .map(({ id, image, title, price }: ProductProps) => {
-                            return (
-                                <NavLink
-                                    key={id}
-                                    to={`/${id}`}
-                                    className="card card-compact h-full bg-base-100 border-solid 
-                                        border border-gray-200 rounded-xl min-w-[240px] lg:card-normal "
-                                >
-                                    <figure className="flex h-80 bg-white overflow-hidden object-cover py-5 px-10">
-                                        <img
-                                            src={image}
-                                            alt="상품 이미지"
-                                            className="h-1/2 transition-transform duration-300"
-                                        />
-                                    </figure>
-                                    <div className="card-body bg-gray-200">
-                                        <h2 className="card-title text-base">
-                                            {title}
-                                        </h2>
-                                        <p className="text-base">
-                                            {formatCurrency(price)}
-                                        </p>
-                                    </div>
-                                </NavLink>
-                            );
-                        })}
+                <div className="overflow-x-scroll w-full sm:overflow-visible">
+                    <div
+                        className={`w-full grid gap-6 ${
+                            isScrollX ? "grid-flow-col" : "grid-flow-row"
+                        } auto-cols-[300px] sm:grid-flow-row sm:grid-cols-2 lg:grid-cols-4`}
+                        ref={gridRef}
+                    >
+                        {apiResponse
+                            .filter((d) =>
+                                d.category.includes(categoryNames[category])
+                            )
+                            .slice(0, limit)
+                            .map(
+                                ({ id, image, title, price }: ProductProps) => {
+                                    return (
+                                        <NavLink
+                                            key={id}
+                                            to={`/${id}`}
+                                            className="card card-compact card-bordered h-full bg-base-100 border-solid 
+                                            border border-gray-200 rounded-xl lg:card-normal dark:border-gray-800"
+                                        >
+                                            <figure className="flex h-80 bg-white overflow-hidden object-cover px-6">
+                                                <img
+                                                    src={image}
+                                                    alt="상품 이미지"
+                                                    className="h-1/2 flex-shrink-0 hover:transition-transform duration-300"
+                                                />
+                                            </figure>
+                                            <div className="card-body bg-gray-200 rounded-b-xl dark:bg-gray-700">
+                                                <h2 className="card-title text-base">
+                                                    {title}
+                                                </h2>
+                                                <p className="text-base">
+                                                    {formatCurrency(price)}
+                                                </p>
+                                            </div>
+                                        </NavLink>
+                                    );
+                                }
+                            )}
+                    </div>
                 </div>
             </>
         );
     };
 
     return (
-        <div>
-            <section className="pt-6 px-4 container mx-auto">
+        <>
+            <section className="pt-6 pb-4 px-4 container mx-auto ">
                 {loading ? (
                     <Loading />
                 ) : (
-                    <ShowProducts category={ctg} limit={lim} />
+                    <ShowProducts
+                        category={ctg}
+                        limit={lim}
+                        isScrollX={isScrollX}
+                    />
                 )}
             </section>
-        </div>
+        </>
     );
 }
